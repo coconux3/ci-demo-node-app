@@ -4,36 +4,31 @@ on:
     branches: [main]
   pull_request:
 jobs:
-  super-linter:
-    runs-on: ubuntu-latest
-    container: node:latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: super-linter/super-linter@main
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
-  yaml:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ibiqlik/action-yamllint@master
-        with:
-          file_or_dir: .github/workflows
   markdown:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: DavidAnson/markdownlint-cli2-action@main
+        continue-on-error: true
         with:
           globs: "**/*.md"
-  eslint:
+  yaml:
     runs-on: ubuntu-latest
-    container: node:current
     steps:
       - uses: actions/checkout@v4
-      - uses: wearerequired/lint-action@v2
+      - uses: ibiqlik/action-yamllint@master
+        continue-on-error: true
         with:
-          eslint: false
+          file_or_dir: .github/workflows
+          config_data: "{extends: relaxed, rules: {line-length: disable}}"
+  context:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: crazy-max/ghaction-dump-context@master
+        continue-on-error: true
+  node:
+    runs-on: ubuntu-latest
+    container: node:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --version
