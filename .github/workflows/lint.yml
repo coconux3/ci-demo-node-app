@@ -1,0 +1,39 @@
+name: lint
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  super-linter:
+    runs-on: ubuntu-latest
+    container: node:latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: super-linter/super-linter@main
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+  yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ibiqlik/action-yamllint@master
+        with:
+          file_or_dir: .github/workflows
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@main
+        with:
+          globs: "**/*.md"
+  eslint:
+    runs-on: ubuntu-latest
+    container: node:current
+    steps:
+      - uses: actions/checkout@v4
+      - uses: wearerequired/lint-action@v2
+        with:
+          eslint: false
