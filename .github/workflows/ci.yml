@@ -9,13 +9,21 @@ jobs:
     container: node:latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@main
         with:
           node-version: 20
       - run: npm test
+    permissions:
+      contents: read
   lint:
     runs-on: ubuntu-latest
     container: node:lts
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: echo "lint ok"
+    permissions:
+      contents: read
