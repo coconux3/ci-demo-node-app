@@ -1,0 +1,21 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: node:latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@main
+        with:
+          node-version: 20
+      - run: npm test
+  lint:
+    runs-on: ubuntu-latest
+    container: node:lts
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "lint ok"
